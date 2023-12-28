@@ -7,7 +7,7 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",  // Corrected from "bundler" to "node"
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -18,7 +18,13 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    // Shadcn ui
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+     } // Removed trailing comma after last element
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
