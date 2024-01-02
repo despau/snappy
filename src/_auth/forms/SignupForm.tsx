@@ -3,18 +3,24 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Link } from "react-router-dom"
 
+import { useToast } from "@/components/ui/use-toast"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from '@/components/ui/button';
 import { SignupValidation } from "@/lib/validation"
 import { Loader } from "lucide-react"
-import { createUserAccount } from "@/lib/appwrite/api"
+// import { createUserAccount } from "@/lib/appwrite/api"
+import { useCreateUserAccount, useSignInAccount } from "@/lib/react-query/queriesAndMutations"
 
 
 
  const SignupForm = () => {
 
-  const isLoading = false;
+  const { toast } = useToast();
+
+  const { mutateAsync: createUserAccount, isLoading: isCreatingUser } = useCreateUserAccount();
+
+  const { mutateAsync: signInAccount, isLoading: isSigninIn } = useSignInAccount();
 
    // 1. Define your form.
    const form = useForm<z.infer<typeof SignupValidation>>({
@@ -31,7 +37,22 @@ import { createUserAccount } from "@/lib/appwrite/api"
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
     // Create the user.
     const newUser = await createUserAccount(values)
-    console.log(newUser)
+
+    if( !newUser ){
+      return toast({
+        title: "Sign up Failed. Please try again with different credentials.",
+      });
+    }
+
+    const session = await signInAccount({
+      email: values.email,
+      password: values.password
+    });
+
+    if( !session ) {
+      return toast({ title: 'Sign In faild. Please try again.' })
+    }
+
   }
 
   return (
@@ -104,7 +125,7 @@ import { createUserAccount } from "@/lib/appwrite/api"
             )}
           />
           <Button type="submit" className="shad-button_primary" >
-            { isLoading ? (
+            { isCreatingUser ? (
               <div className="flex-center gap-2">
                 <Loader /> Loading...
               </div>
