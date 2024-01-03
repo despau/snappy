@@ -27,7 +27,7 @@ export async function createUserAccount(user: INewUser){
             imageUrl: avatarUrl,
         });
 
-        return newAccount;
+        return newUser;
 
     } catch (error) {
         console.log(error);
@@ -42,6 +42,7 @@ export async function saveUserToDB(user: {
     name: string;
     imageUrl: URL;
     username?: string;
+    imageId: string;
 } ){
 
     try {
@@ -51,6 +52,8 @@ export async function saveUserToDB(user: {
             ID.unique(),
             user
         )
+
+        console.log('saving user to db: ', newUser)
         
         return newUser;
 
@@ -82,6 +85,7 @@ export async function getCurrentUser(){
 
     try {
         const currentAccount = await account.get();
+        console.log('currentAccount: ', currentAccount)
         
         if( !currentAccount ) throw Error;
 
@@ -93,7 +97,9 @@ export async function getCurrentUser(){
 
         if( !currentUser ) throw Error;
 
+        console.log('currentUser.documents[0]: ', currentUser.documents[0])
         return currentUser.documents[0];
+
 
     } catch (error) {
         console.log(error);
