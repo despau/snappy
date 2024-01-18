@@ -12,7 +12,7 @@ const CreatePost = () => {
         </div>
 
         {/* post form */}
-        <PostForm />
+        <PostForm action='Create'/>
       </div>
     </div>
   )
