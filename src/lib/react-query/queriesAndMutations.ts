@@ -55,7 +55,7 @@ export const useCreatePost = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ postId, likesArray }: { postId: string; likesArray: string[]} ) => likePost(postId, likesArray),
+        mutationFn: ({ postId, likesArray }: { postId?: string; likesArray: string[]} ) => likePost(postId || '', likesArray),
         onSuccess: (data) => {
             queryClient.invalidateQueries({
                 queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id]
@@ -78,7 +78,7 @@ export const useCreatePost = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ postId, userId }: { postId: string; userId: string} ) => savePost(postId, userId),
+        mutationFn: ({ postId, userId }: { postId?: string; userId: string} ) => savePost(postId || "", userId),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
